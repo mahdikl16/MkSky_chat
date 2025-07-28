@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat MK Sky   🔐</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyArNyQuHcSAT-IFW1_RK9baKGofNUhltbI",
+      authDomain: "mk-sky-26496.firebaseapp.com",
+      projectId: "mk-sky-26496",
+      storageBucket: "mk-sky-26496.firebasestorage.app",
+      messagingSenderId: "944673432847",
+      appId: "1:944673432847:web:b057025763453302298a7a",
+      measurementId: "G-DE8LW0N4XW"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const messagesRef = ref(db, "messages");
+
+    const CORRECT_PASSWORD = "mksky37"; // ✨ بدلها بكلمة السر لي تحبها
+
+    window.onload = () => {
+      const passwordScreen = document.getElementById("passwordScreen");
+      const chatScreen = document.getElementById("chatScreen");
+      const passwordInput = document.getElementById("passwordInput");
+      const enterBtn = document.getElementById("enterBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+
+      const nameInput = document.getElementById("name");
+      const messageInput = document.getElementById("message");
+      const sendBtn = document.getElementById("send");
+      const chatBox = document.getElementById("chat");
+
+      enterBtn.onclick = () => {
+        if (passwordInput.value === CORRECT_PASSWORD) {
+          passwordScreen.style.display = "none";
+          chatScreen.style.display = "block";
+        } else {
+          alert('❌ No mother fuck')
+        }
+      };
+
+      logoutBtn.onclick = () => {
+        chatScreen.style.display = "none";
+        passwordScreen.style.display = "block";
+        passwordInput.value = "";
+        chatBox.innerHTML = "";
+      };
+
+      sendBtn.onclick = () => {
+        const name = nameInput.value.trim();
+        const message = messageInput.value.trim();
+        if (name && message) {
+          push(messagesRef, { name, message });
+          messageInput.value = "";
+        }
+      };
+
+      onChildAdded(messagesRef, (snapshot) => {
+        const data = snapshot.val();
+        const div = document.createElement("div");
+        div.innerText = `${data.name}: ${data.message}`;
+        chatBox.appendChild(div);
+      });
+    };
+  </script>
+</head>
+<body>
+  <!-- شاشة كلمة السر -->
+  <div id="passwordScreen">
+    <h3>🔐 أدخل كلمة السر للدخول</h3>
+    <input type="password" id="passwordInput" placeholder="كلمة السر">
+    <button id="enterBtn">دخول</button>
+  </div>
+
+  <!-- شاشة الدردشة -->
+  <div id="chatScreen" style="display:none;">
+    <h2> Chat MK Sky 💀</h2>
+    <button id="logoutBtn">🚪 خروج</button>
+    <br><br>
+    <input type="text" id="name" placeholder="type your name here ...">
+    <input type="text" id="message" placeholder="type here ✒️">
+    <button id="send">Fire 🔥</button>
+    <hr>
+    <div id="chat" style="border:1px solid #ccc; padding:10px; max-height:300px; overflow:auto;"></div>
+  </div>
+</body>
+</html>
